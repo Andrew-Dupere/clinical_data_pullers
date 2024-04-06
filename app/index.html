@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Page</title>
+    <style>
+        body {
+            background-color: darkgreen;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid white;
+            border-radius: 10px;
+            background-color: #333;
+        }
+        .search-form {
+            margin-bottom: 20px;
+        }
+        .search-form input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            border-radius: 5px;
+            border: none;
+            margin-right: 10px;
+        }
+        .search-form button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Page</h1>
+        <form class="search-form" onsubmit="search(event)">
+            <input type="text" id="searchTerm" placeholder="Enter search term...">
+            <button type="submit">Search</button>
+        </form>
+        <table id="searchResults">
+            <thead>
+                <tr>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <!-- Add more columns here as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Search results will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function search(event) {
+            event.preventDefault();
+            const searchTerm = document.getElementById('searchTerm').value;
+            fetch(`http://localhost:8000/search/?search_term=${searchTerm}`)
+                .then(response => response.json())
+                .then(data => {
+                    const searchResults = document.getElementById('searchResults').getElementsByTagName('tbody')[0];
+                    searchResults.innerHTML = '';
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.column1}</td>
+                            <td>${item.column2}</td>
+                            <!-- Add more columns here as needed -->
+                        `;
+                        searchResults.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
